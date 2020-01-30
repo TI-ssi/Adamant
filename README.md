@@ -4,13 +4,23 @@ This project is based on Laravel and Lumen. It aim to make a base code to start 
 
 ## Installation
 
-Clone the api project and the frontend one.
+While you have to install each project in order to fully experience Adamant, each part mat be use independently from the other. So you may use only part of the project as needed.
 
-On the api one, setup the database connection setting in the .env file and run the migration.
-On the frontend one, setup the config/api.php file to link to the url of the api one with the required OAuth2 credential.
+### API
 
-Don't forget to run composer install on each used project.
+1- Clone or download Adamant-API
+2- Copy the ".env.example" file and rename the copy ".env"
+3- Edit your new ".env" file to add your database credential.
+4- Run ```composer install```
+5- Run ```php artisan migrate```
+6- Run ```php artisan passport:install --force```
 
-You should now have a helloworld! page with minimal functionnality.
+Note the generated keys for further use. 
 
-p.s. you may use only one of the project if you intend to only make an api or only consume one.
+
+### Front-End
+
+1- Clone or download Adamant-FrontEnd
+2- If youre connecting to an API, edit "config/api.php" file to add your API credential.
+3- Run ```composer install```
+
