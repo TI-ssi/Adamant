@@ -8,19 +8,19 @@ While you have to install each project in order to fully experience Adamant, eac
 
 ### API
 
-1- Clone or download Adamant-API
-2- Copy the ".env.example" file and rename the copy ".env"
-3- Edit your new ".env" file to add your database credential.
-4- Run ```composer install```
-5- Run ```php artisan migrate```
-6- Run ```php artisan passport:install --force```
+1- Clone or download Adamant-API  
+2- Copy the ".env.example" file and rename the copy ".env"  
+3- Edit your new ".env" file to add your database credential.  
+4- Run ```composer install```  
+5- Run ```php artisan migrate```  
+6- Run ```php artisan passport:install --force```  
 
-Note the generated keys for further use. 
+Note the generated keys for further use.  
 
 
 ### Front-End
 
-1- Clone or download Adamant-FrontEnd
-2- If youre connecting to an API, edit "config/api.php" file to add your API credential.
-3- Run ```composer install```
+1- Clone or download Adamant-FrontEnd  
+2- If youre connecting to an API, edit "config/api.php" file to add your API credential.  
+3- Run ```composer install```  
 
