@@ -1,0 +1,10 @@
+{ 
+"package": { 
+"name": "ti-ssi/adamant-frontend", "version": "1.0.0", 
+        "source": {
+          "url": "https://github.com/TI-ssi/Adamant-frontend.git", 
+	"type": "git", 
+          "reference": "master"
+        }
+    }
+}
