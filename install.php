@@ -33,10 +33,40 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 				}
 			}
 
+		break;
+
+		case 'composer-install':
+		     $response['composerOk'] = true;
+		     if(isset($postBody['force']) && $postBody['force']) unlink('composer.phar');
+		     if(file_exists('composer.phar')){
+			$response['log'] ='A composer.phar file is already present';
+		     }else{
+			//load and install composer
+			$expected = file_get_contents("https://composer.github.io/installer.sig");
+			copy('https://getcomposer.org/installer', 'composer-setup.php');
+
+			$actual=hash_file('sha384', 'composer-setup.php');
+
+			if ( $actual === $expected){ 
+				putenv('COMPOSER_HOME='.__DIR__);
+				$response['log'] = shell_exec('php composer-setup.php --quiet');
+				$response['log'] .= ' Composer installed.';
+			} else {
+			        $response['composerOk'] = false;
+			}
+
+			unlink('composer-setup.php');
+			unlink('keys.dev.pub');
+			unlink('keys.tags.pub');
+
+		    }
+
+
 
 		break;
+
 		default:
-			$response = ['message' => 'Something is missing'];
+			$response = ['log' => 'Something is missing'];
 	}
 
 	echo json_encode($response);
@@ -84,7 +114,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 				<span v-html="npmVer"></span>
 			    </div>
 			</div>
-			<h6 v-else>Step #{{ step }}</h6>
+			<div v-if="step==1" class="row" >
+			     <h6 class="col-12 bg-light text-left py-2">#1 Composer</h6>
+			     <button class="btn btn-danger" v-on:click="composer(true)">Force install</button>
+			</div>
+			<div v-if="log" class="row">
+			     <div class="offset-1 col-10 text-left">
+			     	  <pre>{{log}}</pre>
+			     </div>
+			</div>
 
 			<div class="d-inline-flex justify-content-center my-2">
 				<button class="btn btn-primary" v-if="phpVerOk && nodeVerOk && npmVerOk" v-on:click="next()">{{ step == 0 ? btnText[0] : btnText[1] }}</button>
@@ -102,8 +140,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 					nodeVerOk:false,
 					npmVer:'&nbsp;',
 					npmVerOk:false,
-					btnText: ['install', 'Next'],
-					step:0
+					btnText: ['Begin installation', 'Next'],
+					step:0,
+					log:''
   				},
   				methods:{
 					getRequirement:function(){
@@ -118,8 +157,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 							this.npmVerOk = response.data.npmVerOk;
 						})
 					},
+					composer:function(force =false){
+						axios
+      						.post('./install.php',{'step':'composer-install', 'force':force})
+      						.then(response => {
+							this.log = response.data.log;
+							this.composerOk = response.data.composerOk;
+						})
+					},
 					next:function(){
 						this.step++;
+						if(this.step==1){this.composer();}
 					}
   				},
   				mounted () {
